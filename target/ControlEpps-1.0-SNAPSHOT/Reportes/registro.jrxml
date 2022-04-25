@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ac1e60f-b99b-4f5b-af0d-07eac08d13ee">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codOperario" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codRegistro" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT concat(operario.nombresoperario, ' ', operario.apellidosoperario) as nombreOperario, operario.dnioperaio as dniOperario, 
+operario.puestooperario as puestoOperario, 
+operario.areaoperario as areaOperario, 
+operario.plantaoperario as plantaOperario,
+registro.formatoregistro as formatoRegistro,
+registro.nombreproyecto as nombreProyectoRegistro,
+registro.ubicacion as ubicacionRegistro,
+registro.numerotrabajadores as numeroTrabajadoresRegistro,
+registro.nombreproyectooperario as nombreProyectoOperRegistro,
+registro.plantaoperario as plantaOperRegistro,
+registro.numeroregistro as numeroRegistro,
+detalleregistro.*
+FROM operario, registro, detalleregistro
+WHERE operario.codoperario = $P{codOperario} and
+detalleregistro.codregistro = $P{codRegistro}]]>
+	</queryString>
+	<field name="nombreoperario" class="java.lang.String"/>
+	<field name="dnioperario" class="java.lang.String"/>
+	<field name="puestooperario" class="java.lang.String"/>
+	<field name="areaoperario" class="java.lang.String"/>
+	<field name="plantaoperario" class="java.lang.String"/>
+	<field name="formatoregistro" class="java.lang.String"/>
+	<field name="nombreproyectoregistro" class="java.lang.String"/>
+	<field name="ubicacionregistro" class="java.lang.String"/>
+	<field name="numerotrabajadoresregistro" class="java.lang.Integer"/>
+	<field name="nombreproyectooperregistro" class="java.lang.String"/>
+	<field name="plantaoperregistro" class="java.lang.String"/>
+	<field name="numeroregistro" class="java.lang.String"/>
+	<field name="coddetalleregistro" class="java.lang.Integer"/>
+	<field name="codregistro" class="java.lang.Integer"/>
+	<field name="codepp" class="java.lang.Integer"/>
+	<field name="cantidadentregaepp" class="java.lang.Integer"/>
+	<field name="observacion" class="java.lang.String"/>
+	<field name="nombreepp" class="java.lang.String"/>
+	<field name="tallaepp" class="java.lang.String"/>
+	<field name="fechaentregaepp" class="java.sql.Date"/>
+	<field name="conformidad" class="java.lang.Boolean"/>
+	<field name="motivoentrega" class="java.lang.Boolean"/>
+	<variable name="numeroregistro_1" class="java.lang.Integer" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{numeroregistro}]]></variableExpression>
+	</variable>
+	<variable name="numeroregistro_2" class="java.lang.Integer" resetType="Page" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{numeroregistro}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="148" height="33" uuid="ea76d8cd-3d8a-467d-a97e-124736cccb97"/>
+			</rectangle>
+			<textField evaluationTime="Report">
+				<reportElement x="0" y="59" width="100" height="20" uuid="268aebe9-a538-4ab8-8d7e-8e5fa1df4402"/>
+				<textFieldExpression><![CDATA[$V{numeroregistro_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

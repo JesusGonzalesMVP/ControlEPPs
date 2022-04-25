@@ -1,0 +1,405 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/template.xhtml">
+
+
+
+            <ui:define name="content">
+                <h2> Listado de Registros </h2>
+
+                <h:form id="formMostarRegistros">
+                    <p:growl id="mensajeRegistro" showDetail="true" life="3500"/>
+
+                    <p:dataTable id="tablaRegistros" rows="10" paginator="true" paginatorPosition="top" sortOrder="ascending"
+                                 var="reg" value="#{registroBean.listaRegistros}" reflow="true"
+                                 emptyMessage="No hay datos de Registros">
+
+                        <p:column headerText="Nº Registro" 
+                                  filterBy="#{reg.numeroregistro}"
+                                  filterMatchMode="contains"
+                                  style="text-align: center;
+                                  font-weight: bold ">
+                            <h:outputText value="#{reg.numeroregistro}"/>                            
+                        </p:column>
+
+                        <p:column headerText="D.N.I. Operario"
+                                  filterBy="#{reg.codoperario.dnioperaio}"
+                                  filterMatchMode="contains"
+                                  style="text-align: center;
+                                  font-weight: bold ">
+                            <h:outputText value="#{reg.codoperario.dnioperaio}"/>                            
+                        </p:column>
+
+                        <p:column headerText="Nombre Operario" 
+                                  filterBy="#{reg.codoperario.apellidosoperario}"
+                                  filterMatchMode="contains"
+                                  style="font-weight: bold ">
+                            <h:outputText value="#{reg.codoperario.apellidosoperario} #{reg.codoperario.nombresoperario}"/>                            
+                        </p:column>
+
+                        <p:column headerText="Fecha Registro"
+                                  filterBy="#{reg.fecharegistro}"
+                                  filterMatchMode="contains"
+                                  style="text-align: center;
+                                  font-weight: bold ">
+                            <p:calendar value="#{reg.fecharegistro}" pattern="yyyy-MM-dd" disabled="true" />
+                        </p:column>
+
+                        <p:column headerText="Modificar" style="text-align: center;
+                                  font-weight: bold ">
+                            <p:commandButton value="editar" 
+                                             icon="ui-icon-pencil"
+                                             oncomplete="PF('dialogModificarRegistroVer').show();"
+                                             update=":formRegistro">
+                                <f:setPropertyActionListener target="#{registroBean.registro}" value="#{reg}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                </h:form>
+
+                <h:form id="formRegistro">
+                    <p:growl id="messages" showDetail="true" sticky="true"/>
+
+                    <p:dialog id="dlgModificarRegistroVer"
+                              header="DATOS DEL REGISTRO"
+                              widgetVar="dialogModificarRegistroVer"
+                              resizable="false" 
+                              showEffect="explode"
+                              hideEffect="explode" 
+                              modal="true">
+
+
+                        <p:growl id="mensajeGeneral" showDetail="true" sticky="true" life="3500"/>
+
+                        <p:panel header="Fecha :  #{registroBean.obtenerFechaFormateada()} "  
+                                 style="margin: 0 auto; 
+                                        text-align: center;">
+                            <p:layout id="capaDatosOperarioRegistro" style="width: 100%; 
+                                      height: 200px;">
+
+                                <p:layoutUnit id="datosEmpresa"  
+                                              position="west" 
+                                              size="500" 
+                                              style="padding: 5px; 
+                                                     text-align: justify; 
+                                                     font-size: 14px;" >
+                                    <h4> Datos del Centro Laboral </h4>
+                                    <p:separator/>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="RUC: " style="font-weight: bold;"/>
+                                        <h:outputLabel value="20107398962"/>
+
+                                        <h:outputLabel value="Razón social: " style="font-weight: bold;"/>
+                                        <h:outputLabel value="ARES Y M S.A.C"/>
+
+                                        <h:outputLabel value="Dirección Fiscal: " style="font-weight: bold;"/>
+                                        <h:outputLabel value="CALLE TARAPOTO N°1120 BREÑA - LIMA"/>                                       
+
+                                        <h:outputLabel for="txtAreaRegistro" value="Operación: " style="font-weight: bold;"/>
+                                        <p:inplace id="txtAreaRegistro" editor="true" disabled="#{!registroBean.enabled}">
+                                            <p:inputText value="#{registroBean.registro.nombreproyecto}" required="true" label="text" />
+                                        </p:inplace>
+
+                                        <h:outputLabel for="txtUbicacionRegistro" value="Ubicación: " style="font-weight: bold;"/>
+                                        <p:inplace id="txtUbicacionRegistro" editor="true" disabled="#{!registroBean.enabled}">
+                                            <p:inputText value="#{registroBean.registro.ubicacion}" required="true" label="text" />
+                                        </p:inplace>
+
+                                        <h:outputLabel for="txtNumTrabaRegistro" value="Nº Trabajadores: " style="font-weight: bold;"/>
+                                        <p:inplace id="txtNumTrabaRegistro" editor="true" disabled="#{!registroBean.enabled}">
+                                            <p:inputText value="#{registroBean.registro.numerotrabajadores}" required="true" label="text" />
+                                        </p:inplace>
+                                    </h:panelGrid>
+
+                                </p:layoutUnit>
+
+                                <p:layoutUnit id="datosOperario" 
+                                              position="center" 
+                                              size="150" 
+                                              style="padding: 5px; 
+                                                     text-align: justify; 
+                                                     font-size: 14px;" >
+
+                                    <h4> Datos del Operario </h4>
+
+                                    <p:separator/>
+                                    <h:panelGrid id="gridDatosOperario" columns="2">                                                                        
+
+                                        <p:outputLabel value="D.N.I.: " style="font-weight: bold;"/>
+                                        <p:outputLabel id="lblDniOprerario" 
+                                                       value="#{registroBean.registro.codoperario.dnioperaio}"/>
+
+                                        <p:outputLabel value="Nombre:"  style="font-weight: bold;"/>
+                                        <p:outputLabel id="lblNombreOperario" 
+                                                       value="#{registroBean.registro.codoperario.nombresoperario} #{registroBean.registro.codoperario.apellidosoperario}"/>
+
+                                        <p:outputLabel value="Puesto: " style="font-weight: bold;"/>
+                                        <p:outputLabel id="lblCargoOperario" 
+                                                       value="#{registroBean.registro.codoperario.puestooperario}"/>
+
+                                        <h:outputLabel for="txtProyectoRegistro" value="Proyecto: " style="font-weight: bold;"/>
+                                        <p:inplace id="txtProyectoRegistro" editor="true" disabled="#{!registroBean.enabled}">
+                                            <p:inputText value="#{registroBean.registro.nombreproyectooperario}" required="true" label="text" />
+                                        </p:inplace>
+
+                                        <h:outputLabel for="txtPlantaRegistro" value="Planta: " style="font-weight: bold;"/>
+                                        <p:inplace id="txtPlantaRegistro" editor="true" disabled="#{!registroBean.enabled}">
+                                            <p:inputText value="#{registroBean.registro.plantaoperario}" required="true" label="text" />
+                                        </p:inplace>
+                                    </h:panelGrid>
+
+                                </p:layoutUnit>
+
+
+                                <p:layoutUnit id="datosRegistro" position="east" size="200" style="padding: 5px; 
+                                              text-align: center; 
+                                              font-size: 14px;" >
+                                    <h:panelGrid columns="1" style="font-size: 28px; 
+                                                 font-weight: bold;
+                                                 margin-top: 30px; 
+                                                 margin: 0 auto;">
+                                        REGISTRO
+                                        <p:spacer/>
+                                        <p:outputLabel value="#{registroBean.registro.numeroregistro}" 
+                                                       style="font-size: 40px;
+                                                              font-weight: bold;"/>
+                                        
+                                    </h:panelGrid>
+                                </p:layoutUnit>
+                            </p:layout>
+
+                            <p:separator/>
+
+                            <h:panelGrid id="gridBuscarEpp" columns="5" >
+                                <p:outputLabel value=" EPP " style="font-weight: bold;
+                                               font-size: 14px;"/>
+
+                                <p:commandButton value="..." 
+                                                 icon="ui-icon-search"
+                                                 oncomplete="PF('dialogEpps').show();"
+                                                 update=":formRegistro:dlgEpps"/>
+
+                            </h:panelGrid>
+
+                            <!-- Lista de Epp agregados a la listadetalle -->
+                            <p:separator/>
+                            <div class="ui-fluid">
+                                <p:dataTable id="tablaEppsRegistro"
+                                             var="item"
+                                             value="#{registroBean.registro.detalleregistroList}"
+                                             rowIndexVar="rowIndex" 
+                                             editable="true" 
+                                             scrollable="true" 
+                                             scrollHeight="200">
+
+                                    <p:ajax event="rowEdit" listener="#{registroBean.onRowEdit}" update=":formRegistro:tablaEppsRegistro "/>
+                                    <p:ajax event="rowEditCancel" listener="#{registroBean.onRowCancel}" update=":formRegistro:tablaEppsRegistro "/>
+
+                                    <p:column headerText="EPP" style="text-align: center;
+                                              font-weight: bold ">
+                                        <h:outputText value="#{item.codepp.nombreepp}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Talla" style="text-align: center;
+                                              font-weight: bold ;
+                                              width: 40px">
+                                        <h:outputText value="#{item.tallaepp}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Cantidad" style="text-align: center;
+                                              font-weight: bold ;
+                                              width: 50px">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{item.cantidadentregaepp}"/>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:inputText value="#{item.cantidadentregaepp}"
+                                                             label="Cantidad Producto"
+                                                             rendered="true"
+                                                             requiredMessage="Es necesario una cantidad"
+                                                             converter="#{Integer}"
+                                                             converterMessage="Esta no es una cantidad correcta"
+                                                             validatorMessage="La cantidad debe ser mayor o igual a 1">
+                                                    <f:validateLongRange minimum="1"/>
+                                                </p:inputText>
+                                            </f:facet>                                
+                                        </p:cellEditor>
+
+                                    </p:column>
+
+                                    <p:column headerText="Motivo" style="text-align: center;
+                                                                        font-weight: bold ;
+                                                                        width: 120px">
+                                        <p:inputSwitch value="#{item.motivoentrega}" offLabel="NUEVO" onLabel="REPOS"/>
+                                    </p:column>
+
+                                    <p:column headerText="Fecha Entrega" sortBy="#{item.fechaentregaepp}"  style="font-weight: bold ;
+                                              width: 15%">
+                                        <p:calendar value="#{item.fechaentregaepp}" pattern="yyyy-MM-dd" />
+                                    </p:column>
+
+                                    <p:column headerText="Conformidad" style="text-align: center;
+                                              font-weight: bold ;
+                                              width: 90px">
+                                        <p:inputSwitch value="#{item.conformidad}" offLabel="NO" onLabel="SI"/>
+
+                                    </p:column>
+
+                                    <p:column headerText="Observación" style="text-align: center;
+                                              font-weight: bold ;
+                                              width: 15%">
+                                        <p:inputTextarea value="#{item.observacion}" rows="2" cols="20" />
+                                    </p:column>
+
+                                    <p:column headerText="Editar" style="text-align: center;
+                                              font-weight: bold ;
+                                              width: 30px">
+                                        <p:rowEditor/>
+                                    </p:column>
+
+                                    <p:column headerText="Eliminar" style="text-align: center;
+                                                                            font-weight: bold ;
+                                                                            width: 7%">
+                                        <p:commandLink value="X" 
+                                                       actionListener="#{registroBean.quitarEppDetalleRegistroM(item.codepp.codepp, rowIndex)}"
+                                                       title="Quitar Producto" 
+                                                       style="text-decoration:none; 
+                                                       color:crimson"
+                                                       update=":formRegistro:tablaEppsRegistro "/>
+                                    </p:column>
+
+                                </p:dataTable> 
+                            </div>  
+
+                            <p:separator/>
+                            <h3 style="text-align: left;">Estado de Conformidad</h3>
+                            <p:panelGrid columns="6">
+                                <p:outputLabel value="REVISADO " />
+                                <p:selectBooleanCheckbox  value="#{registroBean.registro.revisadoregistro}"/>
+
+                                <p:outputLabel value="APROBADO " />
+                                <p:selectBooleanCheckbox  value="#{registroBean.registro.aprobadoregistro}" />
+
+                                <p:outputLabel value="ENTREGADO " />
+                                <p:selectBooleanCheckbox  value="#{registroBean.registro.entregadoregistro}" />
+                            </p:panelGrid>
+
+                            <p:separator/>
+                            <h:panelGrid columns="3">
+
+                                <p:panel style="width: 100px; height: 50px">
+                                    <h:commandLink id="btnImprimir1"  
+                                                   title="Exportar PDF"
+                                                   actionListener="#{registroBean.verRegistro2()}">
+                                        <p:graphicImage url="/resources/imagenes/impresora.jpeg"/>                                    
+                                    </h:commandLink>
+                                </p:panel>
+                                <p:commandButton value="Actualizar"
+                                                 actionListener="#{registroBean.actualizarRegistro()}"
+                                                 update=":formMostarRegistros:tablaRegistros :formMostarRegistros:mensajeRegistro"
+                                                 oncomplete="PF('dialogModificarRegistroVer').hide(); "
+                                                 style="width: 150px;
+                                                        height: 60px;
+                                                        font-size: 18px"/>
+
+                                <p:commandButton value="Cancelar"
+                                                 action="#{registroBean.cancelarRegistro()}"
+                                                 update=":formRegistro"
+                                                 style="width: 150px;
+                                                        height: 60px;
+                                                        font-size: 18px;"/>
+                            </h:panelGrid>
+
+                        </p:panel>
+
+                        <!-- Dialog para mostrar datos de los Epps del sistema -->
+                        <p:dialog id="dlgEpps" 
+                                  header="Lista de Epps" 
+                                  widgetVar="dialogEpps" 
+                                  modal="false" 
+                                  resizable="false"
+                                  showEffect="explode" 
+                                  hideEffect="explode">
+                            <p:dataTable id="tablaEpps" 
+                                         paginator="true" 
+                                         paginatorPosition="top"  
+                                         rows="10"
+                                         var="epp" 
+                                         value="#{eppBean.listaEpps}"
+                                         sortOrder="ascending"
+                                         emptyMessage="No hay datos de Epps"
+                                         style="width: 700px">
+
+                                <p:column headerText="Nombre EPP"
+                                          filterBy="#{epp.nombreepp}" 
+                                          filterMatchMode="contains"
+                                          style="font-weight: bold">
+                                    <h:outputText value="#{epp.nombreepp}"/>  
+                                </p:column>
+
+                                <p:column headerText="Talla EPP"
+                                          filterBy="#{epp.tallaepp}" 
+                                          filterMatchMode="contains"
+                                          style="text-align: center;
+                                          font-weight: bold ">
+                                    <h:outputText value="#{epp.tallaepp}" />
+                                </p:column>
+
+                                <p:column headerText="Stock" 
+                                          filterBy="#{epp.stockactual}" 
+                                          filterMatchMode="contains"
+                                          style="text-align: center;
+                                          font-weight: bold ">
+                                    <h:outputText value="#{epp.stockactual}" />
+                                </p:column>
+
+                                <p:column headerText="" style="text-align: center;
+                                          font-weight: bold">
+                                    <p:commandButton value="Seleccionar" 
+                                                     actionListener="#{registroBean.pedirCantidadEpp(epp.codepp)}"
+                                                     oncomplete="PF('dialogCantidadEpp').show();"
+                                                     update=":formRegistro:dlgCantidadEpp"/>
+                                </p:column>
+                            </p:dataTable>
+
+                            <p:commandButton value="Cerrar" onclick="PF('dialogEpps').hide();"/>
+                        </p:dialog>
+
+                        <!-- Dialog para pedir la cantidad de Epps a registrar al dar click en seleccionar -->
+                        <p:dialog id="dlgCantidadEpp" 
+                                  widgetVar="dialogCantidadEpp" 
+                                  header="Cantidad" 
+                                  modal="false" 
+                                  resizable="false">
+                            Cantidad de Epp a pedir : 
+                            <p:inputText id="txtCantidadEpp" 
+                                         value="#{registroBean.cantidadEpp}"/>
+                            <p:commandButton value="Aceptar" 
+                                             actionListener="#{registroBean.agregarDatosEpp2()}"
+                                             update=":formRegistro:tablaEppsRegistro :formRegistro:dlgCantidadEpp"
+                                             oncomplete="PF('dialogCantidadEpp').hide(); PF('dialogEpps').hide(); "/>
+                        </p:dialog>
+
+
+                    </p:dialog>
+
+                </h:form>
+
+            </ui:define>
+
+
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="css/default.css"/>
+        <h:outputStylesheet name="css/cssLayout.css"/>
+        <title>Control de Epps</title>
+        <f:event type="preRenderView" listener="#{plantillaBean.verificarSesion()}" />
+    </h:head>
+
+    <h:body>
+        <!--divGeneral - ini
+        <div id="divGeneral">
+        -->    
+
+        <div id="top">
+
+            <ui:insert name="top"></ui:insert>
+
+            <h1>SISTEMA DE CONTROL DE EPPS</h1>
+
+            <div id="sessionUsuario">
+                <span>
+                    <h:form>
+                        <p:outputLabel value="Hola, "/>
+                        <p:outputLabel value="#{loginBean.usuario.codpersona.nombrespersona} #{loginBean.usuario.codpersona.apellidospersona} "/>
+                        <p:commandButton id="btnSalir"  action="#{loginBean.cerrarSession()}" icon="ui-icon-power" title="Salir"/>
+                    </h:form>
+                </span>
+            </div>
+            <div id="menuPrincipal">
+                <h:form>  
+                    <p:menubar>
+                        <p:submenu label="Inicio" icon="ui-icon-arrowreturnthick-1-w">
+                            <p:menuitem value="Pagina Inicio" outcome="/Views/bienvenido" icon="ui-icon-home"/>
+                            <p:separator />
+                            <p:menuitem value="Salir" action="#{loginBean.cerrarSession()}" icon="ui-icon-power" />
+                        </p:submenu>
+
+                        <p:submenu label="Usuarios" icon="ui-icon-gear">
+                            <p:menuitem value="Ver y Editar" outcome="/Views/Administrador/administrador" icon="ui-icon-pencil" />
+                        </p:submenu>
+
+                        <p:submenu label="Operarios" icon="ui-icon-person">
+                            <p:menuitem value="Ver y Editar" outcome="/Views/Operario/operario" icon="ui-icon-pencil" />
+                        </p:submenu>
+
+                        <p:submenu label="Epps" icon="ui-icon-suitcase">
+                            <p:menuitem value="Ver y Editar" outcome="/Views/Epp/epp" icon="ui-icon-pencil" />
+                        </p:submenu>
+
+                        <p:submenu label="Registros" icon="ui-icon-note">
+                            <p:menuitem value="Nuevo" outcome="/Views/Registro/registro" icon="ui-icon-circle-plus" />
+                            <p:separator/>
+                            <p:menuitem value="Ver y Editar" outcome="/Views/Registro/listadoRegistro" icon="ui-icon-pencil" />
+                        </p:submenu>
+
+                    </p:menubar>
+                </h:form>
+            </div>
+        </div>
+
+
+        <div id="content" class="center_content">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+        <div id="bottom" style="color: #ffffff">
+            <ui:insert name="bottom" class="center_content">Davidclass1 - &copy; 2019</ui:insert>
+        </div>
+
+        <!-- divGeneral - fin
+        </div>
+        -->
+    </h:body>
+
+</html>

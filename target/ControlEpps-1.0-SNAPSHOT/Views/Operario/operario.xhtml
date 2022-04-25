@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantilla/template.xhtml">
+
+            <ui:define name="content">
+
+                <h2>Listado de Operarios</h2>
+
+                <h:form>
+                    <p:commandButton value="Nuevo"
+                                     icon="ui-icon-extlink"
+                                     actionListener="#{operarioBean.prepararNuevoOperario()}"
+                                     oncomplete="PF('dialogNuevoOperario').show()" 
+                                     update=":formNuevoOperario"/>
+                </h:form>
+                
+                <h:form id="formMostarOperarios">
+                    <p:growl id="mensajeOperario" showDetail="true" life="3500"/>
+
+                    <p:dataTable id="tablaOperarios" 
+                                 rows="15" 
+                                 paginator="true" 
+                                 paginatorPosition="top" 
+                                 sortOrder="ascending"
+                                 var="ope" 
+                                 value="#{operarioBean.listaOperarios}" 
+                                 reflow="true"
+                                 emptyMessage="No hay datos de Operarios">
+
+                        <p:column headerText="D.N.I." 
+                                  filterBy="#{ope.dnioperaio}" 
+                                  filterMatchMode="contains" 
+                                  style="text-align: center;
+                                         font-weight: bold">
+                            <h:outputText value="#{ope.dnioperaio}"/>
+                        </p:column>
+
+                        <p:column headerText="Nombre Operario" 
+                                  filterBy="#{ope.apellidosoperario}"
+                                  filterMatchMode="contains"
+                                  style="font-weight: bold">
+                            <h:outputText value="#{ope.apellidosoperario} #{ope.nombresoperario}" />  
+                        </p:column>
+                        
+                        <p:column headerText="Puesto" style="text-align: center;
+                                                             font-weight: bold ">
+                            <h:outputText value="#{ope.puestooperario}" />
+                        </p:column>
+                                                
+                        <p:column headerText="Modificar" style="text-align: center;
+                                                                font-weight: bold ">
+                            <p:commandButton value="editar" 
+                                             icon="ui-icon-pencil"
+                                             oncomplete="PF('dialogModificarOperario').show();"
+                                             update=":formModificarOperario">
+                                <f:setPropertyActionListener target="#{operarioBean.operario}" value="#{ope}"/>
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column headerText="Eliminar" style="text-align: center;
+                                                               font-weight: bold ">
+                            <p:commandButton value="Eliminar" 
+                                             icon="ui-icon-trash"
+                                             oncomplete="PF('dialogEliminarOperario').show();"
+                                             update=":formEliminarOperario">
+                                <f:setPropertyActionListener target="#{operarioBean.operario}" value="#{ope}"/>
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="formNuevoOperario" enctype="multipart/form-data">
+                    <p:growl id="messages" showDetail="true" sticky="true" />
+
+                    <p:dialog id="dlgNuevoOperario" 
+                              header="DATOS DEL OPERARIO - NUEVO" 
+                              widgetVar="dialogNuevoOperario" 
+                              resizable="false" 
+                              showEffect="explode"
+                              hideEffect="explode" 
+                              modal="true">
+
+                        <h:panelGrid id="pdDatosOperarios" columns="1">
+
+                            <p:panel header="Foto" style="align-content: center" >
+                                <p:fileUpload fileUploadListener="#{operarioBean.handleFileUploadNuevo}" 
+                                              mode="advanced"
+                                              update="messages photoPreview" 
+                                              auto="true" 
+                                              sizeLimit="1000000" 
+                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                              skinSimple="true"
+                                              label="Seleccionar">
+
+                                    <p:graphicImage id="photoPreview"
+                                                    url="#{operarioBean.ruta}"
+                                                    style="max-height:100px;max-width:200px;" />
+                                </p:fileUpload>
+                            </p:panel>
+                            <p:separator/>
+                            <p:panelGrid columns="3" style="margin: 0 auto" >
+                                <p:outputLabel for="txtNombresOperario" 
+                                               value="Nombres" 
+                                               style="font-weight: bold "/>
+                                <p:inputText id="txtNombresOperario" value="#{operarioBean.operario.nombresoperario}" required="true">
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtNombresOperario"/>
+
+                                <p:outputLabel for="txtApellidosOperario" 
+                                               value="Apellidos"
+                                               style="font-weight: bold "/>
+                                <p:inputText id="txtApellidosOperario" value="#{operarioBean.operario.apellidosoperario}" required="true">
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtApellidosOperario"/>
+
+                                <p:outputLabel for="txtDniOperario" 
+                                               value="D.N.I."
+                                               style="font-weight: bold "/>
+                                <p:inputText id="txtDniOperario" value="#{operarioBean.operario.dnioperaio}" required="true" >
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtDniOperario"/>
+
+                                <p:outputLabel for="txtPuestoOperario" 
+                                               value="Puesto"
+                                               style="font-weight: bold "/>
+                                <p:inputText id="txtPuestoOperario" value="#{operarioBean.operario.puestooperario}" required="true">
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtPuestoOperario"/>
+
+                            </p:panelGrid>
+                        </h:panelGrid>
+
+                        <p:commandButton value="Guardar" 
+                                         actionListener="#{operarioBean.nuevoOperario()}"
+                                         update=":formMostarOperarios:tablaOperarios :formNuevoOperario:pdDatosOperarios :formMostarOperarios:mensajeOperario"
+                                         oncomplete="PF('dialogNuevoOperario').hide();"
+                                         icon="ui-icon-disk"/>
+
+                        <p:commandButton value="Cancelar" 
+                                         icon="ui-icon-closethick"
+                                         onclick="PF('dialogNuevoOperario').hide();"/>
+                    </p:dialog>                    
+                </h:form>
+
+                <h:form id="formModificarOperario" enctype="multipart/form-data">
+                    <p:growl id="messages" showDetail="true" sticky="true"/>
+
+                    <p:dialog id="dlgModificarOperario" 
+                              header="DATOS DEL OPERARIO - MODIFICAR" 
+                              widgetVar="dialogModificarOperario" 
+                              resizable="false" 
+                              showEffect="explode"
+                              hideEffect="explode" 
+                              modal="true">
+
+                        <h:panelGrid columns="1">
+
+                            <p:panel header="Foto" style="align-content: center" >
+                                <p:fileUpload fileUploadListener="#{operarioBean.handleFileUploadModificar}" 
+                                              mode="advanced"
+                                              update="messages photoPreview"
+                                              auto="true" 
+                                              sizeLimit="1000000" 
+                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                              label="Seleccionar"
+                                              skinSimple="true">
+
+                                    <p:graphicImage id="photoPreview"
+                                                    url="#{operarioBean.operario.rutaimagenoperario}"
+                                                    style="max-height:100px;max-width:200px;" />
+                                </p:fileUpload>
+                            </p:panel>
+                            <p:separator/>
+
+                            <p:panelGrid id="pgModificarOperario" columns="3" style="margin: 0 auto">
+                                <p:outputLabel for="txtNombresOperario" 
+                                               value="Nombres"
+                                               style="font-weight: bold"/>
+                                <p:inputText id="txtNombresOperario" value="#{operarioBean.operario.nombresoperario}" required="true">
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtNombresOperario"/>
+
+                                <p:outputLabel for="txtApellidosOperario" 
+                                               value="Apellidos"
+                                               style="font-weight: bold"/>
+                                <p:inputText id="txtApellidosOperario" value="#{operarioBean.operario.apellidosoperario}" required="true">
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtApellidosOperario"/>
+
+                                <p:outputLabel for="txtDniOperario" 
+                                               value="D.N.I."
+                                               style="font-weight: bold"/>
+                                <p:inputText id="txtDniOperario" value="#{operarioBean.operario.dnioperaio}" required="true" >
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtDniOperario"/>
+
+                                <p:outputLabel for="txtPuestoOperario" 
+                                               value="Puesto"
+                                               style="font-weight: bold"/>
+                                <p:inputText id="txtPuestoOperario" value="#{operarioBean.operario.puestooperario}" required="true">
+                                    <!-- Validator -->
+                                </p:inputText>
+                                <p:message for="txtPuestoOperario"/>                                
+
+                            </p:panelGrid>
+
+
+                        </h:panelGrid>
+
+                        <p:commandButton value="Guardar" 
+                                         icon="ui-icon-disk"
+                                         actionListener="#{operarioBean.modificarOperario()}" 
+                                         update=":formMostarOperarios:tablaOperarios :formMostarOperarios:mensajeOperario"
+                                         oncomplete="PF('dialogModificarOperario').hide();"/>
+
+                        <p:commandButton value="Cancelar" 
+                                         icon="ui-icon-closethick"
+                                         onclick="PF('dialogModificarOperario').hide();"/>
+                    </p:dialog>                    
+                </h:form>
+
+                <h:form id="formEliminarOperario">
+                    <p:dialog id="dlgEliminarOperario" 
+                              header="ELIMINAR - OPERARIO"
+                              widgetVar="dialogEliminarOperario" 
+                              resizable="false" 
+                              showEffect="explode"
+                              hideEffect="explode" 
+                              modal="true">
+                        <h:outputText value="Deseas eliminar el registro?"/>
+                        <br/>
+                        <br/>
+                        <p:commandButton value="SI" 
+                                         icon="ui-icon-circle-check"
+                                         actionListener="#{operarioBean.eliminarOperario()}"
+                                         update=":formMostarOperarios:tablaOperarios :formMostarOperarios:mensajeOperario"
+                                         oncomplete="PF('dialogEliminarOperario').hide();"/>
+
+                        <p:commandButton value="NO" 
+                                         icon="ui-icon-circle-close"
+                                         onclick="PF('dialogEliminarOperario').hide();"/>
+                    </p:dialog>                    
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
